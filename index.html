@@ -145,8 +145,20 @@ img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
 				.lg-thumb-item.active {
 					opacity: 1;
 				}
-	         </style>	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><script src="js/wp-emoji-release.min.js" defer=""></script></head>
+	         </style>	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><script src="js/wp-emoji-release.min.js" defer=""></script><!-- Meta Pixel · RECETASLATAM -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','1837116514135172');
+fbq('track','PageView');
+</script>
+<!-- /Meta Pixel -->
+</head>
 <body class="wp-singular page-template page-template-elementor_canvas page page-id-171 wp-embed-responsive wp-theme-hello-elementor hello-elementor-default elementor-default elementor-template-canvas elementor-kit-4 elementor-page elementor-page-171">
+<noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=1837116514135172&ev=PageView&noscript=1"></noscript>
 			<div data-elementor-type="wp-page" data-elementor-id="171" class="elementor elementor-171" data-elementor-post-type="page">
 				<div class="elementor-element elementor-element-c9216bd e-con e-atomic-element e-flexbox-base e-8cd04f2 " data-id="c9216bd" data-element_type="e-flexbox" data-e-type="e-flexbox" data-interaction-id="c9216bd">
     		<div class="elementor-element elementor-element-757118a elementor-widget elementor-widget-html" data-id="757118a" data-element_type="widget" data-e-type="widget" data-widget_type="html.default">
@@ -1824,4 +1836,58 @@ var e="script#wp-emoji-settings",t=document.querySelector(e);if(!(t instanceof H
 
 
 
+<script>
+/* Rastreamento da página (Meta Pixel + repasse de UTMs para o checkout Hotmart)
+   - PageView: no <head>
+   - ViewContent: ao carregar
+   - Scroll 50/75/90 e tempo na página: eventos personalizados para criar públicos
+   - Clique no botão de compra: evento personalizado (InitiateCheckout e Purchase são disparados pela Hotmart no checkout, evitando duplicidade)
+   - UTMs/fbclid/src/sck da URL de entrada são guardados e anexados aos links de checkout */
+(function(){
+  var PRODUCT={content_name:'Cocina Libre',content_ids:['cocina-libre'],content_type:'product',value:7,currency:'USD'};
+  var KEYS=['utm_source','utm_medium','utm_campaign','utm_content','utm_term','fbclid','src','sck','xcod'];
+  function track(ev,data,custom){try{fbq(custom?'trackCustom':'track',ev,data||{});}catch(e){}}
+
+  /* guarda parâmetros da primeira visita (sobrevive a navegação/recarga na sessão) */
+  var saved={};
+  try{saved=JSON.parse(sessionStorage.getItem('cl_params')||'{}');}catch(e){}
+  var q=new URLSearchParams(location.search);
+  KEYS.forEach(function(k){var v=q.get(k);if(v)saved[k]=v;});
+  if(!q.get('sck')&&(q.get('utm_source')||(!saved.sck&&saved.utm_source))){saved.sck=[saved.utm_source,saved.utm_campaign,saved.utm_content].filter(Boolean).join('|');}
+  try{sessionStorage.setItem('cl_params',JSON.stringify(saved));}catch(e){}
+
+  function decorate(a){
+    try{
+      var u=new URL(a.href,location.href);
+      if(u.host===location.host)return;
+      Object.keys(saved).forEach(function(k){if(!u.searchParams.has(k))u.searchParams.set(k,saved[k]);});
+      a.href=u.toString();
+    }catch(e){}
+  }
+  function isCheckout(a){var h=a.getAttribute('href')||'';return /pay\.hotmart\.com|go\.hotmart\.com|#CHECKOUT/i.test(h);}
+
+  track('ViewContent',PRODUCT);
+
+  document.addEventListener('DOMContentLoaded',function(){
+    [].forEach.call(document.querySelectorAll('a[href]'),function(a){if(isCheckout(a))decorate(a);});
+  });
+  document.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('a[href]');
+    if(!a||!isCheckout(a))return;
+    decorate(a);
+    track('ClickBotonCompra',{content_name:PRODUCT.content_name,value:PRODUCT.value,currency:PRODUCT.currency,boton:(a.textContent||'').trim().slice(0,60)},true);
+  },true);
+
+  var marks=[50,75,90],done={};
+  window.addEventListener('scroll',function(){
+    var h=document.documentElement, pct=(h.scrollTop+innerHeight)/h.scrollHeight*100;
+    marks.forEach(function(m){if(pct>=m&&!done[m]){done[m]=1;track('Scroll'+m,{content_name:PRODUCT.content_name},true);}});
+  },{passive:true});
+  setTimeout(function(){track('Tiempo60s',{content_name:PRODUCT.content_name},true);},60000);
+  var seenOffer=false, offer=document.querySelector('#cl-oferta .price');
+  if(offer&&'IntersectionObserver' in window){
+    new IntersectionObserver(function(en,o){if(en[0].isIntersecting&&!seenOffer){seenOffer=true;track('VioOferta',{content_name:PRODUCT.content_name,value:PRODUCT.value,currency:PRODUCT.currency},true);o.disconnect();}},{threshold:.5}).observe(offer);
+  }
+})();
+</script>
 </body></html><!-- Page cached by LiteSpeed Cache 7.9.1 on 2026-10-05 01:10:20 -->
