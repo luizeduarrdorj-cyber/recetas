@@ -195,6 +195,13 @@ h2 .oro{color:var(--oro)}
 .cl-d1{background:var(--crema)}
 .cl-d1 .topbar{background:var(--topbar);color:var(--oro-cl);text-align:center;font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding:11px 16px}
 .cl-d1 .topbar b{background:rgba(255,255,255,.1);color:#fff;padding:3px 10px;border-radius:6px;margin:0 8px;font-variant-numeric:tabular-nums}
+/* barra do desconto fixa no topo durante a rolagem */
+.cl-d1 .topbar{position:fixed;top:0;left:0;right:0;z-index:9999;padding-top:calc(11px + env(safe-area-inset-top));box-shadow:0 2px 12px rgba(0,0,0,.18)}
+.cl-d1{padding-top:var(--cl-tb-h,42px)}
+@media(max-width:600px){
+  .cl-d1 .topbar{font-size:11px;letter-spacing:.05em;padding:9px 10px;padding-top:calc(9px + env(safe-area-inset-top));line-height:1.5}
+  .cl-d1 .topbar b{padding:2px 7px;margin:0 4px}
+}
 .cl-d1 .inner{padding:40px 0 60px;text-align:center}
 .cl-d1 h1{font-size:clamp(30px,6vw,50px);font-weight:900;margin-bottom:14px;letter-spacing:-.01em}
 .cl-d1 h1 .it{display:block;font-style:italic;font-weight:600;color:var(--oro)}
@@ -213,6 +220,14 @@ h2 .oro{color:var(--oro)}
 <!-- ================= DOBRA 01 · HERO ================= -->
 <section class="cl-d1">
     <div class="topbar">🔥 Tu descuento de US$40 termina en <b id="cl-timer">10:00</b></div>
+    <script>
+    /* reserva o espaço da barra fixa para ela não cobrir o conteúdo (a altura muda no mobile) */
+    (function(){
+      var bar=document.currentScript.previousElementSibling, sec=bar.closest('.cl-d1');
+      function fit(){sec.style.setProperty('--cl-tb-h',bar.offsetHeight+'px');}
+      fit(); window.addEventListener('resize',fit); window.addEventListener('load',fit);
+    })();
+    </script>
   <div class="wrap inner">
     <h1>400 Recetas<span class="it">sin azúcar, sin gluten</span>Y SIN LACTOSA
       <span class="sm">para comer distinto los 365 días del año</span>
