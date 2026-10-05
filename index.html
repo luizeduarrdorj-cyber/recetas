@@ -230,7 +230,7 @@ h2 .oro{color:var(--oro)}
 
 <!-- ================= DOBRA 01 · HERO ================= -->
 <section class="cl-d1">
-    <div class="topbar">🔥 Último día para aprovechar todos los bonus  🔥</div>
+    <div class="topbar">🔥 Tu descuento de US$40 termina en <b id="cl-timer">10:00</b></div>
   <div class="wrap inner">
     <h1>400 Recetas<span class="it">sin azúcar, sin gluten</span>Y SIN LACTOSA
       <span class="sm">para comer distinto los 365 días del año</span>
@@ -247,12 +247,11 @@ h2 .oro{color:var(--oro)}
 </section>
 
 <script>
-/* Countdown real do hero — 15 min por visitante (persistente via localStorage, com fallback) */
+/* Countdown de 10 min por visitante (persistente via localStorage) — atualiza o topo e a oferta */
 (function(){
-  var DUR=15*60*1000;               // 15 minutos
-  var KEY='cl400_deadline';
-  var el=document.getElementById('cl-timer');
-  if(!el)return;
+  var DUR=10*60*1000;               // 10 minutos
+  var KEY='cl400_deadline_10m';
+
   var deadline;
   try{
     var saved=localStorage.getItem(KEY);
@@ -266,7 +265,10 @@ h2 .oro{color:var(--oro)}
   function tick(){
     var diff=Math.max(0,deadline-Date.now());
     var m=Math.floor(diff/60000), s=Math.floor(diff%60000/1000);
-    el.textContent=pad(m)+':'+pad(s);
+    var el=document.getElementById('cl-timer'), em=document.getElementById('d7-m'), es=document.getElementById('d7-s');
+    if(el)el.textContent=pad(m)+':'+pad(s);
+    if(em)em.textContent=pad(m);
+    if(es)es.textContent=pad(s);
     if(diff<=0)clearInterval(t);
   }
   tick();
@@ -962,11 +964,10 @@ h2 .oro{color:var(--oro)}
     <div class="clock">
       <img decoding="async" class="clock__img" src="images/Design-sem-nome-35.png" alt="" aria-hidden="true" onerror="this.style.display='none'">
       <div class="clock__row">
-        <div class="clock__box"><b id="d7-h">07</b><span>HS</span></div>
-        <div class="clock__box"><b id="d7-m">53</b><span>MIN</span></div>
-        <div class="clock__box"><b id="d7-s">47</b><span>SEG</span></div>
+        <div class="clock__box"><b id="d7-m">10</b><span>MIN</span></div>
+        <div class="clock__box"><b id="d7-s">00</b><span>SEG</span></div>
       </div>
-      <div class="clock__tag">● La oferta termina hoy</div>
+      <div class="clock__tag">● Tu descuento de US$40 termina en 10 minutos</div>
     </div>
 
     <!-- value stack -->
@@ -1018,21 +1019,6 @@ h2 .oro{color:var(--oro)}
   </div>
 </section>
 
-<script>
-(function(){
-  var root=document.currentScript.closest('.cl-d7')||document;
-  function pad(n){return n<10?'0'+n:''+n;}
-  function tick(){
-    var now=new Date();
-    var end=new Date(now.getFullYear(),now.getMonth(),now.getDate(),23,59,59,999);
-    var diff=Math.max(0,end-now);
-    var h=Math.floor(diff/3600000),m=Math.floor(diff%3600000/60000),s=Math.floor(diff%60000/1000);
-    var eh=root.querySelector('#d7-h'),em=root.querySelector('#d7-m'),es=root.querySelector('#d7-s');
-    if(eh)eh.textContent=pad(h);if(em)em.textContent=pad(m);if(es)es.textContent=pad(s);
-  }
-  tick();setInterval(tick,1000);
-})();
-</script>
 
 				</div>
 		
